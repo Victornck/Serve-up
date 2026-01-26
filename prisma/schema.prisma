@@ -6,13 +6,10 @@ datasource db {
   provider = "postgresql"
 }
 
-
-
-
 model Restaurant {
   id             String         @id @default(uuid())
   name           String
-  slug           String
+  slug           String         @unique
   description    String
   avatarImageUrl String
   coverImageUrl  String
@@ -79,5 +76,5 @@ enum OrderStatus {
 
 enum ConsumptionMethod {
   TAKEAWAY
-  DINEIN
+  DINE_IN
 }
