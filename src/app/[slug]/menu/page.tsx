@@ -4,6 +4,7 @@ import { db } from "@/lib/prisma";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { ChevronLeftIcon, ScrollTextIcon } from "lucide-react";
+import RestaurantHeader from "./componentes/header";
 
 interface RestaurantMenuPageProps {
   params: Promise<{ slug: string }>;
@@ -31,28 +32,7 @@ const RestaurantMenuPage = async ({
 
   return (
     <div>
-      <div className="relative h-[250px] w-full">
-        <Button
-          variant="secondary"
-          size="icon"
-          className="absolute left-4 z-50 rounded-full"
-        >
-          <ChevronLeftIcon />
-        </Button>
-        <Image
-          src={restaurant?.coverImageUrl}
-          alt={restaurant?.name}
-          fill
-          className="object-cover"
-        />
-        <Button
-          variant="secondary"
-          size="icon"
-          className="absolute right-4 z-50 rounded-full"
-        >
-          <ScrollTextIcon />
-        </Button>
-      </div>
+      <RestaurantHeader restaurant={restaurant} />
     </div>
   );
 };
