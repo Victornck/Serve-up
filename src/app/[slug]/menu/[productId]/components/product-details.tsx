@@ -116,7 +116,7 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
         </div>
 
         <Button
-          className="w-full rounded-full bg-yellow-400 font-semibold"
+          className="mx-4 h-12 w-[calc(100%-2rem)] rounded-full bg-red-600 text-lg font-semibold text-white hover:bg-red-700"
           onClick={handleAddToCart}
         >
           Adicionar à sacola
