@@ -74,20 +74,9 @@ const FinishOrderDialog = ({ open, onOpenChange }: FinishOrderDialogProps) => {
   const onSubmit = async (data: FormSchema) => {
     try {
       setIsLoading(true);
-      const consumptionMethodParam = searchParams.get("consumptionMethod");
-      console.log("RAW consumptionMethodParam:", consumptionMethodParam);
-      console.log("ENUM VALUES:", Object.values(ConsumptionMethod));
-
-      if (
-        !consumptionMethodParam ||
-        !Object.values(ConsumptionMethod).includes(
-          consumptionMethodParam as ConsumptionMethod,
-        )
-      ) {
-        throw new Error("Método de consumo inválido");
-      }
-
-      const consumptionMethod = consumptionMethodParam as ConsumptionMethod;
+      const consumptionMethod = searchParams.get(
+        "consumptionMethod",
+      ) as ConsumptionMethod;
 
       const order = await createOrder({
         consumptionMethod,
@@ -103,12 +92,12 @@ const FinishOrderDialog = ({ open, onOpenChange }: FinishOrderDialogProps) => {
         consumptionMethod,
         cpf: data.cpf,
       });
-      if (!process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY) return;
+      if (!process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY) return;
       const stripe = await loadStripe(
-        process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
+        process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY,
       );
-      await stripe?.redirectToCheckout({
-        sessionId,
+      stripe?.redirectToCheckout({
+        sessionId: sessionId,
       });
     } catch (error) {
       console.error(error);
@@ -164,14 +153,14 @@ const FinishOrderDialog = ({ open, onOpenChange }: FinishOrderDialogProps) => {
               <DrawerFooter>
                 <Button
                   type="submit"
-                  className="rounded-full bg-red-500 text-white"
+                  className="mx-4 h-12 w-[calc(100%-2rem)] rounded-full bg-red-600 text-lg font-semibold text-white hover:bg-red-700"
                   disabled={isLoading}
                 >
                   {isLoading && <Loader2Icon className="animate-spin" />}
                   Finalizar
                 </Button>
                 <DrawerClose asChild>
-                  <Button className="w-full rounded-full border">
+                  <Button className="bg-trasparent mx-4 h-12 w-[calc(100%-2rem)] rounded-full border border-zinc-700 text-lg font-semibold text-black">
                     Cancelar
                   </Button>
                 </DrawerClose>
