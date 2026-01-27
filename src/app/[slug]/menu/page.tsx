@@ -4,8 +4,8 @@ import { db } from "@/lib/prisma";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { ChevronLeftIcon, ScrollTextIcon } from "lucide-react";
-import RestaurantHeader from "./componentes/header";
-import RestaurantCategories from "./componentes/categories";
+import RestaurantHeader from "./components/header";
+import RestaurantCategories from "./components/categories";
 
 interface RestaurantMenuPageProps {
   params: Promise<{ slug: string }>;
