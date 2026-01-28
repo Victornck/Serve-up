@@ -1,6 +1,6 @@
 "use server";
 
-import { ConsumptionMethod, OrderStatus } from "@prisma/client";
+import { ConsumptionMethod } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 
 import { db } from "@/lib/prisma";
@@ -44,28 +44,19 @@ export const createOrder = async (input: CreateOrderInput) => {
       status: "PENDING",
       customerName: input.customerName,
       customerCpf: removeCpfPunctuation(input.customerCpf),
-
-      restaurant: {
-        connect: {
-          id: restaurant.id,
-        },
-      },
-
       orderProducts: {
         createMany: {
           data: productsWithPricesAndQuantities,
         },
       },
-
       total: productsWithPricesAndQuantities.reduce(
         (acc, product) => acc + product.price * product.quantity,
         0,
       ),
-
       consumptionMethod: input.consumptionMethod,
+      restaurantId: restaurant.id,
     },
   });
-
   revalidatePath(`/${input.slug}/orders`);
   // redirect(
   //   `/${input.slug}/orders?cpf=${removeCpfPunctuation(input.customerCpf)}`,

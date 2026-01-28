@@ -50,10 +50,14 @@ model Order {
   id                Int               @id @default(autoincrement())
   total             Float
   status            OrderStatus
+  consumptionMethod ConsumptionMethod
   restaurant        Restaurant        @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
   restaurantId      String
-  consumptionMethod ConsumptionMethod
   orderProducts     OrderProduct[]
+  customerName      String
+  customerCpf       String
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
 }
 
 model OrderProduct {

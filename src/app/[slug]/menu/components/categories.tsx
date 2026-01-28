@@ -3,11 +3,14 @@
 import { Prisma } from "@prisma/client";
 import { ClockIcon } from "lucide-react";
 import Image from "next/image";
-import { useState } from "react";
+import { useContext, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { formatCurrency } from "@/helpers/format-currency";
 
+import { CartContext } from "../contexts/cart";
+import CartSheet from "./cart-sheet";
 import Products from "./products";
 
 interface RestaurantCategoriesProps {
@@ -27,15 +30,14 @@ type MenuCategoriesWithProducts = Prisma.MenuCategoryGetPayload<{
 const RestaurantCategories = ({ restaurant }: RestaurantCategoriesProps) => {
   const [selectedCategory, setSelectedCategory] =
     useState<MenuCategoriesWithProducts>(restaurant.menuCategories[0]);
-
+  const { products, total, toggleCart, totalQuantity } =
+    useContext(CartContext);
   const handleCategoryClick = (category: MenuCategoriesWithProducts) => {
     setSelectedCategory(category);
   };
-
   const getCategoryButtonVariant = (category: MenuCategoriesWithProducts) => {
     return selectedCategory.id === category.id ? "default" : "secondary";
   };
-
   return (
     <div className="relative z-50 mt-[-1.5rem] rounded-t-3xl bg-white">
       <div className="p-5">
@@ -46,6 +48,7 @@ const RestaurantCategories = ({ restaurant }: RestaurantCategoriesProps) => {
             height={45}
             width={45}
           />
+          
           <div>
             <h2 className="text-lg font-semibold">{restaurant.name}</h2>
             <p className="text-xs opacity-55">{restaurant.description}</p>
@@ -65,11 +68,7 @@ const RestaurantCategories = ({ restaurant }: RestaurantCategoriesProps) => {
               key={category.id}
               variant={getCategoryButtonVariant(category)}
               size="sm"
-              className={`rounded-full transition-colors ${
-                selectedCategory.id === category.id
-                  ? "bg-yellow-500 text-white hover:bg-yellow-500"
-                  : "bg-muted text-muted-foreground hover:bg-muted"
-              }`}
+              className="rounded-full"
             >
               {category.name}
             </Button>
@@ -80,6 +79,26 @@ const RestaurantCategories = ({ restaurant }: RestaurantCategoriesProps) => {
 
       <h3 className="px-5 pt-2 font-semibold">{selectedCategory.name}</h3>
       <Products products={selectedCategory.products} />
+      {products.length > 0 && (
+        <div className="fixed bottom-0 left-0 right-0 flex w-full items-center justify-between border-t bg-white px-5 py-3">
+          <div>
+            <p className="text-muted-foreground text-xs">Total dos pedidos</p>
+            <p className="text-lg font-semibold">
+              {formatCurrency(total)}
+              <span className="text-muted-foreground text-xs font-normal">
+                / {totalQuantity} {totalQuantity > 1 ? "itens" : "item"}
+              </span>
+            </p>
+          </div>
+          <Button
+            className="bg-red-600 text-sm text-white"
+            onClick={toggleCart}
+          >
+            Ver sacola
+          </Button>
+          <CartSheet />
+        </div>
+      )}
     </div>
   );
 };

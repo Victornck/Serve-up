@@ -85,13 +85,12 @@ const CpfForm = () => {
               )}
             />
             <DrawerFooter>
-              <Button variant="destructive" className="w-full rounded-full">
+              <Button className="mx-4 h-12 w-[calc(100%-2rem)] rounded-full bg-red-600 text-lg font-semibold text-white hover:bg-red-700">
                 Confirmar
               </Button>
               <DrawerClose asChild>
                 <Button
-                  variant="outline"
-                  className="w-full rounded-full"
+                  className="bg-trasparent mx-4 h-12 w-[calc(100%-2rem)] rounded-full border border-zinc-700 text-lg font-semibold text-black"
                   onClick={handleCancel}
                 >
                   Cancelar
