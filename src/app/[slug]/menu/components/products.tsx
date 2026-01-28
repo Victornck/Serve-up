@@ -1,15 +1,21 @@
-import { ConsumptionMethod, Product } from "@prisma/client";
+"use client";
+
+import { Product } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 
 interface ProductsProps {
   products: Product[];
-  consumptionMethod: ConsumptionMethod;
 }
 
-const Products = ({ products, consumptionMethod }: ProductsProps) => {
+const Products = ({ products }: ProductsProps) => {
   const { slug } = useParams<{ slug: string }>();
+  const searchParams = useSearchParams();
+
+  const consumptionMethod =
+    searchParams.get("consumptionMethod") ?? "TAKEAWAY";
+
   return (
     <div className="space-y-3 px-5">
       {products.map((product) => (
