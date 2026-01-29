@@ -2,7 +2,7 @@
 
 import { simulatePayment } from "@/app/[slug]/menu/actions/simulate-payment";
 
-import { OrderStatus, Prisma } from "@prisma/client";
+import { ConsumptionMethod, OrderStatus, Prisma } from "@prisma/client";
 import { ChevronLeftIcon, ScrollTextIcon } from "lucide-react";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
@@ -66,15 +66,28 @@ const OrderList = ({ orders }: OrderListProps) => {
       </div>
       {orders.map((order) => (
         <Card key={order.id}>
-          <CardContent className="space-y-4 p-5">
-            <div
-              className={`w-fit rounded-full px-2 py-1 text-xs font-semibold text-white ${
-                order.status === OrderStatus.PAID
-                  ? "bg-green-500"
-                  : "bg-gray-400"
-              }`}
-            >
-              {getStatusLabel(order.status)}
+          <CardContent className="space-y-4 px-5">
+            <div className="mb-8 flex justify-between">
+              <div
+                className={`w-fit rounded-full px-2 py-1 text-xs font-semibold text-white ${
+                  order.status === OrderStatus.PAID
+                    ? "bg-green-500"
+                    : "bg-gray-400"
+                }`}
+              >
+                {getStatusLabel(order.status)}
+              </div>
+              <div
+                className={`w-fit rounded-full px-2 py-1 text-xs font-semibold ${
+                  order.consumptionMethod === "TAKEAWAY"
+                    ? "border border-blue-500 bg-transparent text-blue-500"
+                    : "border border-black bg-transparent text-black"
+                }`}
+              >
+                {order.consumptionMethod === "TAKEAWAY"
+                  ? "Takeaway"
+                  : "Dine In"}
+              </div>
             </div>
 
             <div className="flex items-center gap-2">

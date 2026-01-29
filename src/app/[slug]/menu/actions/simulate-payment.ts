@@ -9,6 +9,6 @@ export async function simulatePayment(orderId: number, slug: string) {
     where: { id: orderId },
     data: { status: OrderStatus.PAID },
   });
-
   revalidatePath(`/${slug}/orders`);
 }
+

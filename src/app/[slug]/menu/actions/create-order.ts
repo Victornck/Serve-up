@@ -19,51 +19,37 @@ interface CreateOrderInput {
 }
 
 export const createOrder = async (input: CreateOrderInput) => {
-  const restaurant = await db.restaurant.findUnique({
-    where: { slug: input.slug },
-  });
-
+  const restaurant = await db.restaurant.findUnique({ where: { slug: input.slug } });
   if (!restaurant) throw new Error("Restaurant not found");
 
   const productsWithPrices = await db.product.findMany({
-    where: {
-      id: { in: input.products.map((product) => product.id) },
-    },
+    where: { id: { in: input.products.map(p => p.id) } },
   });
 
   const order = await db.order.create({
     data: {
-      status: OrderStatus.PENDING,
+      status: OrderStatus.PENDING, // ✅ inicia como PENDENTE
       customerName: input.customerName,
       customerCpf: removeCpfPunctuation(input.customerCpf),
       orderProducts: {
         createMany: {
-          data: input.products.map((product) => ({
-            productId: product.id,
-            quantity: product.quantity,
-            price: productsWithPrices.find((p) => p.id === product.id)!.price,
+          data: input.products.map(p => ({
+            productId: p.id,
+            quantity: p.quantity,
+            price: productsWithPrices.find(pp => pp.id === p.id)!.price,
           })),
         },
       },
-      total: input.products.reduce((acc, product) => {
-        const price = productsWithPrices.find(
-          (p) => p.id === product.id,
-        )!.price;
-        return acc + price * product.quantity;
+      total: input.products.reduce((acc, p) => {
+        const price = productsWithPrices.find(pp => pp.id === p.id)!.price;
+        return acc + price * p.quantity;
       }, 0),
       consumptionMethod: input.consumptionMethod,
       restaurantId: restaurant.id,
     },
   });
 
-  // 💰 pagamento simulado
-  await db.order.update({
-    where: { id: order.id },
-    data: { status: OrderStatus.PAID },
-  });
-
-  // 🔥 ESSENCIAL
   revalidatePath(`/${input.slug}/orders`);
 
-  return order;
+  return order; // sem atualizar para PAID aqui
 };
