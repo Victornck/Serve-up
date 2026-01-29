@@ -31,13 +31,15 @@ const CartProductItem = ({ product }: CartItemProps) => {
           {/* QUANTIDADE */}
           <div className="flex items-center gap-1 text-center">
             <Button
-              className="h-7 w-7 rounded-lg bg-transparent border"
+              variant={"outline"}
+              className="h-7 w-7 rounded-lg"
               onClick={() => decreaseProductQuantity(product.id)}
             >
               <ChevronLeftIcon />
             </Button>
             <p className="w-7 text-xs">{product.quantity}</p>
             <Button
+              variant={"destructive"}
               className="h-7 w-7 rounded-lg bg-red-500 text-white"
               onClick={() => increaseProductQuantity(product.id)}
             >
@@ -48,7 +50,8 @@ const CartProductItem = ({ product }: CartItemProps) => {
       </div>
       {/* BOTÃO DE DELETAR */}
       <Button
-        className="h-7 w-7 rounded-lg text-white bg-red-500"
+        variant={"destructive"}
+        className="h-7 w-7 rounded-lg"
         onClick={() => removeProduct(product.id)}
       >
         <TrashIcon />

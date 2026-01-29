@@ -39,11 +39,12 @@ const getStatusLabel = (status: OrderStatus) => {
 
   return "";
 };
-const { slug } = useParams<{ slug: string }>();
 
 const OrderList = ({ orders }: OrderListProps) => {
   const router = useRouter();
   const handleBackClick = () => router.back();
+  const { slug } = useParams<{ slug: string }>();
+
   const handleSimulatePayment = async (orderId: number) => {
     await simulatePayment(orderId, slug);
     router.refresh();
