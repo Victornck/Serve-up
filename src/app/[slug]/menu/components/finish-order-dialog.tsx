@@ -34,6 +34,7 @@ import { createOrder } from "../actions/create-order";
 import { CartContext } from "../contexts/cart";
 import { isValidCpf } from "../helpers/cpf";
 
+
 const formSchema = z.object({
   name: z.string().trim().min(1, {
     message: "O nome é obrigatório.",
@@ -96,6 +97,7 @@ const FinishOrderDialog = ({ open, onOpenChange }: FinishOrderDialogProps) => {
       console.error(error);
     }
   };
+
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>

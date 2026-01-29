@@ -49,7 +49,7 @@ model Product {
 model Order {
   id                Int               @id @default(autoincrement())
   total             Float
-  status            OrderStatus
+  status            OrderStatus       @default(PENDING)
   consumptionMethod ConsumptionMethod
   restaurant        Restaurant        @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
   restaurantId      String
@@ -74,8 +74,9 @@ model OrderProduct {
 
 enum OrderStatus {
   PENDING
-  IN_PREPARATION
+  PAID
   FINISHED
+  CANCELED
 }
 
 enum ConsumptionMethod {

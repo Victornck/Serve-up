@@ -1,9 +1,11 @@
 "use client";
 
+import { simulatePayment } from "@/app/[slug]/menu/actions/simulate-payment";
+
 import { OrderStatus, Prisma } from "@prisma/client";
 import { ChevronLeftIcon, ScrollTextIcon } from "lucide-react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -32,14 +34,21 @@ interface OrderListProps {
 
 const getStatusLabel = (status: OrderStatus) => {
   if (status === "FINISHED") return "Finalizado";
-  if (status === "IN_PREPARATION") return "Em preparo";
   if (status === "PENDING") return "Pendente";
+  if (status === "PAID") return "Pago";
+
   return "";
 };
+const { slug } = useParams<{ slug: string }>();
 
 const OrderList = ({ orders }: OrderListProps) => {
   const router = useRouter();
   const handleBackClick = () => router.back();
+  const handleSimulatePayment = async (orderId: number) => {
+    await simulatePayment(orderId, slug);
+    router.refresh();
+  };
+
   return (
     <div className="space-y-6 p-6">
       <Button
@@ -58,10 +67,15 @@ const OrderList = ({ orders }: OrderListProps) => {
         <Card key={order.id}>
           <CardContent className="space-y-4 p-5">
             <div
-              className={`w-fit rounded-full px-2 py-1 text-xs font-semibold text-white ${order.status === OrderStatus.FINISHED ? "bg-green-500 text-white" : "bg-gray-200 text-gray-500"} `}
+              className={`w-fit rounded-full px-2 py-1 text-xs font-semibold text-white ${
+                order.status === OrderStatus.PAID
+                  ? "bg-green-500"
+                  : "bg-gray-400"
+              }`}
             >
               {getStatusLabel(order.status)}
             </div>
+
             <div className="flex items-center gap-2">
               <div className="relative h-5 w-5">
                 <Image
@@ -86,6 +100,14 @@ const OrderList = ({ orders }: OrderListProps) => {
             </div>
             <Separator />
             <p className="text-sm font-medium">{formatCurrency(order.total)}</p>
+            {order.status === OrderStatus.PENDING && (
+              <Button
+                className="bg-blue-600 text-white hover:bg-green-700"
+                onClick={() => handleSimulatePayment(order.id)}
+              >
+                Simular pagamento
+              </Button>
+            )}
           </CardContent>
         </Card>
       ))}
