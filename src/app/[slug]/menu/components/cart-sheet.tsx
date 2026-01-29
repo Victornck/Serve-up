@@ -15,13 +15,14 @@ import CartProductItem from "./cart-product-item";
 import FinishOrderDialog from "./finish-order-dialog";
 import { Separator } from "@/components/ui/separator";
 
-
 const CartSheet = () => {
-
   const [finishOrderDialogIsOpen, setFinishOrderDialogIsOpen] = useState(false);
   const { isOpen, toggleCart, products, total } = useContext(CartContext);
-  const discont = total - 5;
-  const totalDiscont = discont;
+
+  const hasDiscount = total >= 15;
+  const discount = hasDiscount ? 5 : 0;
+  const totalWithDiscount = total - discount;
+
   return (
     <Sheet open={isOpen} onOpenChange={toggleCart}>
       <SheetContent className="w-[80%]">
@@ -45,14 +46,16 @@ const CartSheet = () => {
 
               <div className="flex items-center justify-between">
                 <p className="text-muted-foreground text-gray-400">Descontos</p>
-                <p className="font-medium">{formatCurrency(5)}</p>
+                <p className="font-medium">{formatCurrency(discount)}</p>
               </div>
 
               <Separator className="my-1" />
 
               <div className="flex items-center justify-between">
                 <p className="text-lg font-semibold">Total</p>
-                <p className="text-lg font-bold">{formatCurrency(totalDiscont)}</p>
+                <p className="text-lg font-bold">
+                  {formatCurrency(totalWithDiscount)}
+                </p>
               </div>
             </CardContent>
           </Card>
